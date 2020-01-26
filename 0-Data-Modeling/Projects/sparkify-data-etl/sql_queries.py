@@ -11,12 +11,12 @@ time_table_drop = "DROP TABLE time"
 songplay_table_create = ("""
 CREATE TABLE IF NOT EXISTS songplays 
 (
-    songplay_id INT,
+    songplay_id INT NOT NULL PRIMARY KEY,
     start_time TIMESTAMP,
     user_id INT,
     level INT,
-    song_id VARCHAR,
-    artist_id VARCHAR,
+    song_id VARCHAR NOT NULL,
+    artist_id VARCHAR NOT NULL,
     session_id INT,
     location VARCHAR,
     user_agent VARCHAR
@@ -37,22 +37,22 @@ CREATE TABLE IF NOT EXISTS users
 song_table_create = ("""
 CREATE TABLE IF NOT EXISTS songs 
 (
-    song_id INT,
+    song_id VARCHAR,
     title VARCHAR,
-    artist_id INT,
+    artist_id VARCHAR,
     year INT,
-    duration INT
+    duration NUMERIC
 )
 """)
 
 artist_table_create = ("""
 CREATE TABLE IF NOT EXISTS artists 
 (
-    artist_id INT,
+    artist_id VARCHAR,
     name VARCHAR,
     location VARCHAR,
-    latitude INT,
-    longitude INT
+    latitude NUMERIC,
+    longitude NUMERIC
 )
 """)
 
