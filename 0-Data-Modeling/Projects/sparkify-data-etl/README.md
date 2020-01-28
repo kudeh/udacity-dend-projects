@@ -23,3 +23,13 @@
     >> source venv/bin/activate
     >> pip3 install -r requirements.txt
     ```
+
+## Usage
+1. Create Tables
+    ```bash
+    >> python create_tables.py
+    ```
+2. Run etl
+    ```bash
+    >> python etl.py
+    ```
