@@ -58,8 +58,8 @@ def create_tables(cur, conn):
 def main():
     cur, conn = create_database()
     
-    create_tables(cur, conn)
     drop_tables(cur, conn)
+    create_tables(cur, conn)
 
     conn.close()
 
