@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS users
     user_id INT,
     first_name VARCHAR,
     last_name VARCHAR,
-    gender CHAR,
+    gender CHAR(1),
     level VARCHAR
 )
 """)
