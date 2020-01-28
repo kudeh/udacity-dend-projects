@@ -1,9 +1,9 @@
 # DROP TABLES
 
 songplay_table_drop = "DROP TABLE IF EXISTS songplays CASCADE"
-user_table_drop = "DROP TABLE IF EXISTS users"
+user_table_drop = "DROP TABLE IF EXISTS users CASCADE"
 song_table_drop = "DROP TABLE IF EXISTS songs CASCADE"
-artist_table_drop = "DROP TABLE IF EXISTS artists"
+artist_table_drop = "DROP TABLE IF EXISTS artists CASCADE"
 time_table_drop = "DROP TABLE IF EXISTS time"
 
 # CREATE TABLES
@@ -13,10 +13,10 @@ CREATE TABLE IF NOT EXISTS songplays
 (
     songplay_id SERIAL PRIMARY KEY,
     start_time TIMESTAMP,
-    user_id INT,
+    user_id INT REFERENCES users(user_id),
     level VARCHAR,
     song_id VARCHAR REFERENCES songs(song_id),
-    artist_id VARCHAR,
+    artist_id VARCHAR REFERENCES artists(artist_id),
     session_id INT,
     location VARCHAR,
     user_agent VARCHAR
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS songplays
 user_table_create = ("""
 CREATE TABLE IF NOT EXISTS users 
 (
-    user_id INT,
+    user_id INT PRIMARY KEY,
     first_name VARCHAR,
     last_name VARCHAR,
     gender CHAR(1),
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS songs
 artist_table_create = ("""
 CREATE TABLE IF NOT EXISTS artists 
 (
-    artist_id VARCHAR,
+    artist_id VARCHAR PRIMARY KEY,
     name VARCHAR,
     location VARCHAR,
     latitude NUMERIC,
@@ -78,6 +78,8 @@ INSERT INTO songplays
 VALUES
     (%s, %s, %s, %s,
      %s, %s, %s, %s)
+ON CONFLICT 
+DO NOTHING
 """)
 
 user_table_insert = ("""
@@ -85,6 +87,8 @@ INSERT INTO users
     (user_id, first_name, last_name, gender, level)
 VALUES
     (%s, %s, %s, %s, %s)
+ON CONFLICT 
+DO NOTHING
 """)
 
 song_table_insert = ("""
@@ -92,6 +96,8 @@ INSERT INTO songs
     (song_id, title, artist_id, year, duration)
 VALUES
     (%s, %s, %s, %s, %s)
+ON CONFLICT 
+DO NOTHING
 """)
 
 artist_table_insert = ("""
@@ -99,6 +105,8 @@ INSERT INTO artists
     (artist_id, name, location, latitude, longitude)
 VALUES
     (%s, %s, %s, %s, %s)
+ON CONFLICT 
+DO NOTHING
 """)
 
 
