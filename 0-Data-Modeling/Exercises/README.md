@@ -19,7 +19,13 @@
        Shall the new role be a superuser? (y/n) y
     $ createdb studentdb
     ```
-* Create virtual env, install dependencies:
+4. Setup Apache Cassandra:
+    * Install [Cassandra](http://cassandra.apache.org/download/)
+    * Start Apache Cassandra
+    ```bash
+    brew services start cassandra
+    ```
+5. Create virtual env, install dependencies:
 ```bash
 $ python -m venv venv
 $ source venv/bin/activate
