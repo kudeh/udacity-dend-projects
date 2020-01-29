@@ -1,3 +1,4 @@
 jupyter
 ipykernel
 psycopg2
+cassandra-driver
