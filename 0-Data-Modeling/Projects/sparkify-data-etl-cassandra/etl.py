@@ -4,8 +4,11 @@ import csv
 import pandas as pd
 
 def preprocess():
-    """
-
+    """Preprocesses event_data files into one csv
+    Args:
+        None
+    Returns:
+        df (`pandas.core.frame.DataFrame`): dataframe containing all events data
     """
     #### Creating list of filepaths to process original event csv data files
     # checking your current working directory

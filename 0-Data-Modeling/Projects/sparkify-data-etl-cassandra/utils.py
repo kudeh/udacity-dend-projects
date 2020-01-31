@@ -1,4 +1,36 @@
 import pandas as pd
+from cassandra.cluster import Cluster
+
+
+def create_cluster_keyspace():
+    """
+    """
+    # This should make a connection to a Cassandra instance your local machine
+    try: 
+        cluster = Cluster(['127.0.0.1'])
+        # To establish connection and begin executing queries, need a session
+        session = cluster.connect()   
+    except Exception as e:
+        print(e)
+
+    # Create Keyspace
+    try:
+        session.execute("""
+        CREATE KEYSPACE IF NOT EXISTS sparkifydb
+        WITH REPLICATION = 
+        { 'class': 'SimpleStrategy', 'replication_factor': 1 }
+        """)
+    except Exception as e:
+        print(e)
+
+    # Set Keyspace
+    try:
+        session.set_keyspace('sparkifydb')
+    except Exception as e:
+        print(e)
+
+    return cluster, session
+
 
 def execute_query(session, query):
     """Executes a query and returns the result
@@ -6,7 +38,6 @@ def execute_query(session, query):
     Args:
         session (`cassandra.cluster.Session`): cassandra session object
         query (str): query to drop table
-
     Returns:
         result (`cassandra.cluster.ResultSet`): cassandra result set
     """
