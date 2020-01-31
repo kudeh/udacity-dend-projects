@@ -18,9 +18,19 @@ $ source venv/bin/activate
 (venv) $ ipython kernel install --user --name=projectname  
 ```
 
-## Run Project
+## Project Structure
+Files and their purposes: 
 
+| file | description |
+| --- | --- |
+| `sql_queries.py` | contains all queries used in project |
+| `utils.py` | contains all utility functions used in project |
+| `etl.py` | contains function for preprocessing event data files |
+| `main.ipynb` | entry point to execute project |
+
+## Run Project
 * Open Jupter notebook in directory
 ```bash
 (venv) $ jupyter notebook
 ```
+* Run `main.ipynb`

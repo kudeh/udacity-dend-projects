@@ -3,7 +3,12 @@ from cassandra.cluster import Cluster
 
 
 def create_cluster_keyspace():
-    """
+    """Create Cluster and KeySpace, Sets KeySpace
+    Args:
+        None
+    Returns: 
+        cluster (`cassandra.cluster`): cassandra cluster object
+        session (`cassandra.cluster.Session`): cassandra session object
     """
     # This should make a connection to a Cassandra instance your local machine
     try: 
