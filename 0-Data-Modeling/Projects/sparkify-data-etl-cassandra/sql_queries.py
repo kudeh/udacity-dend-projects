@@ -34,5 +34,14 @@ song_user_insert = """INSERT INTO song_user (song_title, first_name, last_name)
                       VALUES (%s, %s, %s)"""
 
 
+# SELECT QUERIES
+session_item_select = """SELECT * FROM session_item
+   WHERE session_id=338 AND session_item_id=4"""
+user_session_select = """SELECT * FROM user_session
+    WHERE user_id=10 AND session_id=182"""
+song_user_select = """SELECT * FROM song_user
+    WHERE song_title='All Hands Against His Own'"""   
+
+
 create_table_queries = [session_item_create, user_session_create, song_user_create]
 drop_table_queries = [session_item_drop, user_session_drop, song_user_drop]

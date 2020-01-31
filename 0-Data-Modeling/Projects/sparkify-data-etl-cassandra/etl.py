@@ -1,6 +1,7 @@
 import os
 import glob
 import csv
+import pandas as pd
 
 def preprocess():
     """
@@ -58,3 +59,8 @@ def preprocess():
 
     with open('event_datafile_new.csv', 'r', encoding = 'utf8') as f:
         print('Num lines: '+ str(sum(1 for line in f)))
+
+    df = pd.read_csv('event_datafile_new.csv', dtype={'artist': str, 'firstName': str, 'gender': str, 'itemInSession': int, 'lastName': str
+                         ,'length': float, 'level': str, 'location': str, 'sessionId': int, 'song': str, 'userId': int})
+
+    return df
