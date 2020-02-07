@@ -1,4 +1,7 @@
 jupyter
 ipykernel
+ipython-sql
 pandas
+psycopg2
 boto3
+matplotlib
