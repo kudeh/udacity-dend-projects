@@ -62,12 +62,12 @@ CREATE TABLE IF NOT EXISTS songs_staging
 songplay_table_create = ("""
 CREATE TABLE IF NOT EXISTS songplays 
 (
-    songplay_id INT IDENTITY(0,1) DISTKEY SORTKEY PRIMARY KEY,
+    songplay_id INT IDENTITY(0,1) DISTKEY SORTKEY,
     start_time TIMESTAMP,
-    user_id INT REFERENCES users(user_id),
+    user_id INT,
     level VARCHAR,
-    song_id VARCHAR REFERENCES songs(song_id),
-    artist_id VARCHAR REFERENCES artists(artist_id),
+    song_id VARCHAR,
+    artist_id VARCHAR,
     session_id INT,
     location VARCHAR,
     user_agent VARCHAR
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS songplays
 user_table_create = ("""
 CREATE TABLE IF NOT EXISTS users 
 (
-    user_id INT PRIMARY KEY,
+    user_id INT,
     first_name VARCHAR,
     last_name VARCHAR,
     gender CHAR(1),
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS users
 song_table_create = ("""
 CREATE TABLE IF NOT EXISTS songs 
 (
-    song_id VARCHAR PRIMARY KEY,
+    song_id VARCHAR,
     title VARCHAR,
     artist_id VARCHAR,
     year INT,
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS songs
 artist_table_create = ("""
 CREATE TABLE IF NOT EXISTS artists 
 (
-    artist_id VARCHAR PRIMARY KEY,
+    artist_id VARCHAR,
     name VARCHAR,
     location VARCHAR,
     latitude NUMERIC,
@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS artists
 time_table_create = ("""
 CREATE TABLE IF NOT EXISTS time 
 (
-    start_time TIMESTAMP,
+    start_time TIMESTAMP SORTKEY,
     hour INT,
     day INT,
     week INT,
@@ -139,9 +139,19 @@ json region 'us-west-2';
 # FINAL TABLES
 
 songplay_table_insert = ("""
+
 """)
 
 user_table_insert = ("""
+SELECT userId AS user_id, firstName AS first_name, lastName AS last_name, 
+       gender, level 
+INTO users (
+SELECT userId AS user_id, firstName AS first_name, lastName AS last_name, 
+       gender, level 
+FROM events_staging
+WHERE page='NextSong' AS u
+
+)
 """)
 
 song_table_insert = ("""
