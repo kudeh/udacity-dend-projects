@@ -5,6 +5,8 @@ import configparser
 config = configparser.ConfigParser()
 config.read('dwh.cfg')
 
+ARN = config.get('IAM_ROLE', 'ARN')
+
 # DROP TABLES
 
 staging_events_table_drop = "DROP TABLE IF NOT EXISTS events_staging"
@@ -60,7 +62,7 @@ CREATE TABLE IF NOT EXISTS songs_staging
 songplay_table_create = ("""
 CREATE TABLE IF NOT EXISTS songplays 
 (
-    songplay_id IDENTITY(0,1) PRIMARY KEY,
+    songplay_id IDENTITY(0,1) DISTKEY SORTKEY PRIMARY KEY,
     start_time TIMESTAMP,
     user_id INT REFERENCES users(user_id),
     level VARCHAR,
@@ -121,10 +123,18 @@ CREATE TABLE IF NOT EXISTS time
 # STAGING TABLES
 
 staging_events_copy = ("""
-""").format()
+COPY events_staging
+FROM 's3://udacity-dend/log_data'
+CREDENTIALS 'aws_iam_role={}'
+json region 'us-west-2';
+""").format(ARN)
 
 staging_songs_copy = ("""
-""").format()
+COPY songs_staging
+FROM 's3://udacity-dend/song_data'
+CREDENTIALS 'aws_iam_role={}'
+json region 'us-west-2';
+""").format(ARN)
 
 # FINAL TABLES
 
