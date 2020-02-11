@@ -126,7 +126,7 @@ staging_events_copy = ("""
 COPY events_staging
 FROM 's3://udacity-dend/log_data'
 CREDENTIALS 'aws_iam_role={}'
-json region 'us-west-2';
+JSON REGION 'us-west-2';
 """).format(ARN)
 
 staging_songs_copy = ("""
@@ -139,33 +139,66 @@ json region 'us-west-2';
 # FINAL TABLES
 
 songplay_table_insert = ("""
-
+SELECT TIMESTAMP 'epoch' + es.ts * interval '1 second' AS start_time, 
+       es.userId AS user_id, es.level, ss.song_id,
+       ss.artist_id, es.sessionId AS session_id, es.location, es.userAgent AS user_agent
+INTO
+songplays
+FROM
+(
+    SELECT TIMESTAMP 'epoch' + es.ts * interval '1 second' AS start_time, 
+       es.userId AS user_id, es.level, ss.song_id,
+       ss.artist_id, es.sessionId AS session_id, es.location, es.userAgent AS user_agent
+    FROM (
+        SELECT * FROM events_staging AS es
+        WHERE page = 'NextSong'
+        LEFT JOIN
+        SELECT * FROM songs_staging AS ss
+        ON es.song = ss.title 
+        AND es.artist = ss.artist_name
+        AND es.length = ss.duration
+    ) 
+)
 """)
 
 user_table_insert = ("""
 SELECT userId AS user_id, firstName AS first_name, lastName AS last_name, 
        gender, level 
-INTO users (
-SELECT userId AS user_id, firstName AS first_name, lastName AS last_name, 
-       gender, level 
+INTO users 
 FROM events_staging
-WHERE page='NextSong' AS u
-
-)
+WHERE page='NextSong'
 """)
 
 song_table_insert = ("""
+SELECT song_id, title, artist_id, year, duration
+INTO
+songs
+FROM songs_staging
 """)
 
 artist_table_insert = ("""
+SELECT artist_id, artist_name AS name, artist_location AS location, 
+       artist_latitude AS latitude, artist_longitude AS longitude
+INTO
+artists
+FROM songs_staging
 """)
 
 time_table_insert = ("""
+SELECT ts AS start_time, 
+       EXTRACT(HOUR FROM ts) AS hour, EXTRACT(DAY FROM ts) AS day, 
+       EXTRACT(WEEK FROM ts) AS week, EXTRACT(MONTH FROM ts) AS month, 
+       EXTRACT(YEAR FROM ts) AS year, EXTRACT(WEEKDAY FROM ts) AS weekday
+INTO
+time
+WHERE page='NextSong'
+FROM 
+(SELECT TIMESTAMP 'epoch' + ts * interval '1 second' AS ts FROM events_staging)
 """)
 
 # QUERY LISTS
 
-create_table_queries = [staging_events_table_create, staging_songs_table_create, user_table_create, song_table_create, artist_table_create, time_table_create, songplay_table_create]
+create_table_queries = [staging_events_table_create, staging_songs_table_create, songplay_table_create, user_table_create, song_table_create, artist_table_create, time_table_create]
 drop_table_queries = [staging_events_table_drop, staging_songs_table_drop, songplay_table_drop, user_table_drop, song_table_drop, artist_table_drop, time_table_drop]
 copy_table_queries = [staging_events_copy, staging_songs_copy]
 insert_table_queries = [songplay_table_insert, user_table_insert, song_table_insert, artist_table_insert, time_table_insert]
