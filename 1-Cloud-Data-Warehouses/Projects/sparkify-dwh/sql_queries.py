@@ -6,9 +6,11 @@ config = configparser.ConfigParser()
 config.read('dwh.cfg')
 
 ARN = config.get('IAM_ROLE', 'ARN')
+LOG_DATA = config.get('S3', 'LOG_DATA')
+LOG_JSONPATH = config.get('S3', 'LOG_JSONPATH')
+SONG_DATA = config.get('S3', 'SONG_DATA')
 
 # DROP TABLES
-
 staging_events_table_drop = "DROP TABLE IF EXISTS events_staging"
 staging_songs_table_drop = "DROP TABLE IF EXISTS songs_staging"
 songplay_table_drop = "DROP TABLE IF EXISTS songplays CASCADE"
@@ -18,7 +20,6 @@ artist_table_drop = "DROP TABLE IF EXISTS artists CASCADE"
 time_table_drop = "DROP TABLE IF EXISTS time"
 
 # CREATE TABLES
-
 staging_events_table_create= ("""
 CREATE TABLE IF NOT EXISTS events_staging
 (
@@ -37,7 +38,7 @@ CREATE TABLE IF NOT EXISTS events_staging
     sessionId INT,
     song VARCHAR,
     status INT,
-    ts TIMESTAMP,
+    ts BIGINT,
     userAgent VARCHAR,
     userId INT
 )
@@ -62,12 +63,12 @@ CREATE TABLE IF NOT EXISTS songs_staging
 songplay_table_create = ("""
 CREATE TABLE IF NOT EXISTS songplays 
 (
-    songplay_id INT IDENTITY(0,1) DISTKEY SORTKEY,
+    songplay_id INT IDENTITY(0,1) SORTKEY PRIMARY KEY,
     start_time TIMESTAMP,
-    user_id INT,
+    user_id INT REFERENCES users(user_id) DISTKEY,
     level VARCHAR,
-    song_id VARCHAR,
-    artist_id VARCHAR,
+    song_id VARCHAR REFERENCES songs(song_id),
+    artist_id VARCHAR REFERENCES artists(artist_id),
     session_id INT,
     location VARCHAR,
     user_agent VARCHAR
@@ -77,34 +78,37 @@ CREATE TABLE IF NOT EXISTS songplays
 user_table_create = ("""
 CREATE TABLE IF NOT EXISTS users 
 (
-    user_id INT,
+    user_id INT SORTKEY PRIMARY KEY,
     first_name VARCHAR,
     last_name VARCHAR,
     gender CHAR(1),
     level VARCHAR
 )
+DISTSTYLE ALL
 """)
 
 song_table_create = ("""
 CREATE TABLE IF NOT EXISTS songs 
 (
-    song_id VARCHAR,
+    song_id VARCHAR SORTKEY PRIMARY KEY,
     title VARCHAR,
     artist_id VARCHAR,
     year INT,
     duration NUMERIC
 )
+DISTSTYLE ALL
 """)
 
 artist_table_create = ("""
 CREATE TABLE IF NOT EXISTS artists 
 (
-    artist_id VARCHAR,
+    artist_id VARCHAR SORTKEY PRIMARY KEY,
     name VARCHAR,
     location VARCHAR,
     latitude NUMERIC,
     longitude NUMERIC
 )
+DISTSTYLE ALL
 """)
 
 time_table_create = ("""
@@ -118,6 +122,7 @@ CREATE TABLE IF NOT EXISTS time
     year INT,
     weekday INT
 )
+DISTSTYLE ALL
 """)
 
 # STAGING TABLES
