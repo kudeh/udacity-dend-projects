@@ -121,20 +121,19 @@ CREATE TABLE IF NOT EXISTS time
 """)
 
 # STAGING TABLES
-
 staging_events_copy = ("""
 COPY events_staging
-FROM 's3://udacity-dend/log_data'
-CREDENTIALS 'aws_iam_role={}'
-JSON REGION 'us-west-2';
-""").format(ARN)
+FROM {}
+IAM_ROLE {}
+FORMAT AS JSON {}
+""").format(LOG_DATA, ARN, LOG_JSONPATH)
 
 staging_songs_copy = ("""
 COPY songs_staging
-FROM 's3://udacity-dend/song_data'
-CREDENTIALS 'aws_iam_role={}'
-json region 'us-west-2';
-""").format(ARN)
+FROM {}
+IAM_ROLE {}
+FORMAT AS JSON 'auto'
+""").format(SONG_DATA, ARN)
 
 # FINAL TABLES
 
