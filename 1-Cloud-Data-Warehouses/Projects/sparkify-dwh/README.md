@@ -30,12 +30,12 @@
 $ python -m venv venv
 $ source venv/bin/activate
 (venv) $ pip install -r requirements.txt
-(venv) $ ipython kernel install --user --name=projectname  
 ```
 
-## Run Exercises
+## Run 
 
-* Open Jupter notebook in directory
+* Open Terminal window
 ```bash
-(venv) $ jupyter notebook
+(venv) $ python create_tables.py
+(venv) $ python etl.py
 ```
