@@ -27,6 +27,9 @@ def process_song_data(spark, input_data, output_data):
         spark(): 
         input_data (str): S3 bucket where song files are stored
         output (str): S3 bucket file path to store resulting files
+
+    Returns:
+        None
     """
     # get filepath to song data file
     song_data = input_data+'song_data'
@@ -41,7 +44,9 @@ def process_song_data(spark, input_data, output_data):
     songs_table.write.parquet(output_data, partitionBy=('year', 'artist'))
 
     # extract columns to create artists table
-    artists_table = df.select('artist_id', 'artist_name', 'artist_location', 'artist_latitude', 'artist_longitude')
+    artists_table = df.selectExpr('artist_id AS artist_id', 'artist_name AS name', 
+                                  'artist_location AS location', 'artist_latitude AS latitude', 
+                                  'artist_longitude AS longitude')
     
     # write artists table to parquet files
     artists_table.write.parquet(output_data)
@@ -49,19 +54,19 @@ def process_song_data(spark, input_data, output_data):
 
 def process_log_data(spark, input_data, output_data):
     # get filepath to log data file
-    log_data = 
+    log_data = input_data + 'log_data'
 
     # read log data file
-    df = 
+    df = spark.read.json(log_data)
     
     # filter by actions for song plays
-    df = 
+    df = df.filter(df.page == 'NextSong')
 
     # extract columns for users table    
-    artists_table = 
+    users_table = df.select('userId', 'firstName', 'lastName', 'gender', 'level')
     
     # write users table to parquet files
-    artists_table
+    users_table
 
     # create timestamp column from original timestamp column
     get_timestamp = udf()
