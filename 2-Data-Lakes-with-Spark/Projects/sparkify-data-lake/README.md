@@ -6,15 +6,11 @@
 1. Create Key-Pair on EC2
 2. Create EMR Cluster
 3. SSH to EMR Cluster
-4. Make sure to use python3 pyspark
-   ```bash
-   export PYSPARK_PYTHON=python3.6
-   ```
-
 
 ## Usage
 * Submit `etl.py` as a spark job
    ```bash
    $ which spark-submit
+   $ export PYSPARK_PYTHON=python3.6
    $ /usr/bin/spark-submit --master yarn ./etl.py
    ```
