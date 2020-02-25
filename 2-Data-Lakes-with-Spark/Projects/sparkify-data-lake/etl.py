@@ -37,6 +37,7 @@ def process_song_data(spark, input_data, output_data):
     
     # read song data file
     df = spark.read.json(song_data)
+    df.createOrReplaceTempView("song_data_table")
 
     # extract columns to create songs table
     songs_table = df.select('song_id', 'title', 'artist_id', 'year', 'duration')
@@ -89,7 +90,7 @@ def process_log_data(spark, input_data, output_data):
     time_table.write.parquet(output_data + 'time.parquet', partitionBy=('year', 'month'), mode='overwrite')
 
     # read in song data to use for songplays table
-    song_df = spark.read.json(input_data+'song_data/*/*/*/*.json')
+    song_df = spark.sql('select * from song_data_table')
 
     # extract columns from joined song and log datasets to create songplays table 
     cond = [df.song == song_df.title, df.artist == song_df.artist_name, df.length == song_df.duration]
