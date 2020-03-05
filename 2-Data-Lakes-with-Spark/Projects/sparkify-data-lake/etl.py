@@ -25,7 +25,7 @@ def create_spark_session():
 def process_song_data(spark, input_data, output_data):
     """Processes song data file from S3 Bucket
     Args:
-        spark(): 
+        spark(:obj:`pyspark.sql.session.SparkSession`): 
         input_data (str): S3 bucket where song files are stored
         output (str): S3 bucket file path to store resulting files
 
@@ -55,6 +55,15 @@ def process_song_data(spark, input_data, output_data):
 
 
 def process_log_data(spark, input_data, output_data):
+    """Processes song data file from S3 Bucket
+    Args:
+        spark(:obj:`pyspark.sql.session.SparkSession`): 
+        input_data (str): S3 bucket where song files are stored
+        output (str): S3 bucket file path to store resulting files
+
+    Returns:
+        None
+    """
     # get filepath to log data file
     log_data = input_data + 'log_data/*/*/*.json'
 
@@ -109,7 +118,7 @@ def process_log_data(spark, input_data, output_data):
 def main():
     spark = create_spark_session()
     input_data = "s3a://udacity-dend/"
-    output_data = "s3a://kene-udacity/"
+    output_data = "s3a://udacity-dend/"
     
     process_song_data(spark, input_data, output_data)    
     process_log_data(spark, input_data, output_data)
