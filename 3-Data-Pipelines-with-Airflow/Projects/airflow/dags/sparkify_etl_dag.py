@@ -48,39 +48,47 @@ stage_songs_to_redshift = StageToRedshiftOperator(
     aws_credentials_id='aws_credentials',
     s3_bucket='udacity-dend',
     s3_key='song_data',
-    use_partitioned=False,
-    partition_template='{execution_date.year}/{execution_date.month}'
 )
 
 load_songplays_table = LoadFactOperator(
     task_id='Load_songplays_fact_table',
     dag=dag,
     redshift_conn_id='redshift',
-    aws_credentials_id='aws_credentials',
     query=SqlQueries.songplay_table_insert,
-    target_table='songplays',
-    target_columns=['start_time', 'user_id', 'level', 'song_id', 'artist_id', 'session_id', 'location', 'user_agent']
+    target_table='songplays'
 )
 
-# load_user_dimension_table = LoadDimensionOperator(
-#     task_id='Load_user_dim_table',
-#     dag=dag
-# )
+load_user_dimension_table = LoadDimensionOperator(
+    task_id='Load_user_dim_table',
+    dag=dag,
+    redshift_conn_id='redshift',
+    query=SqlQueries.user_table_insert,
+    target_table='users'
+)
 
-# load_song_dimension_table = LoadDimensionOperator(
-#     task_id='Load_song_dim_table',
-#     dag=dag
-# )
+load_song_dimension_table = LoadDimensionOperator(
+    task_id='Load_song_dim_table',
+    dag=dag,
+    redshift_conn_id='redshift',
+    query=SqlQueries.song_table_insert,
+    target_table='songs'
+)
 
-# load_artist_dimension_table = LoadDimensionOperator(
-#     task_id='Load_artist_dim_table',
-#     dag=dag
-# )
+load_artist_dimension_table = LoadDimensionOperator(
+    task_id='Load_artist_dim_table',
+    dag=dag,
+    redshift_conn_id='redshift',
+    query=SqlQueries.artist_table_insert,
+    target_table='artists'
+)
 
-# load_time_dimension_table = LoadDimensionOperator(
-#     task_id='Load_time_dim_table',
-#     dag=dag
-# )
+load_time_dimension_table = LoadDimensionOperator(
+    task_id='Load_time_dim_table',
+    dag=dag,
+    redshift_conn_id='redshift',
+    query=SqlQueries.time_table_insert,
+    target_table='time'
+)
 
 # run_quality_checks = DataQualityOperator(
 #     task_id='Run_data_quality_checks',
@@ -91,4 +99,5 @@ end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)
 
 start_operator >> [stage_events_to_redshift, stage_songs_to_redshift]
 [stage_events_to_redshift, stage_songs_to_redshift] >> load_songplays_table
-load_songplays_table >> end_operator
+load_songplays_table >> [load_user_dimension_table, load_song_dimension_table, load_artist_dimension_table, load_time_dimension_table]
+[load_user_dimension_table, load_song_dimension_table, load_artist_dimension_table, load_time_dimension_table] >> end_operator

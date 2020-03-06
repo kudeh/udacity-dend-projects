@@ -56,7 +56,6 @@ class StageToRedshiftOperator(BaseOperator):
             json_paths = 'auto'
             
         self.log.info('Coping data from {} to {} on Redshift'.format(s3_path, table))
-  
         formatted_sql = StageToRedshiftOperator.copy_sql.format(
             self.table,
             s3_path,
