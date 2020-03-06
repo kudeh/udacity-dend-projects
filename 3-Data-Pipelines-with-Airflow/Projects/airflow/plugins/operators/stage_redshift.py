@@ -11,7 +11,7 @@ class StageToRedshiftOperator(BaseOperator):
         FROM '{}'
         ACCESS_KEY_ID '{}'
         SECRET_ACCESS_KEY '{}'
-        FORMAT AS JSON {}
+        FORMAT AS JSON '{}'
     """
 
     @apply_defaults
@@ -55,7 +55,7 @@ class StageToRedshiftOperator(BaseOperator):
         else:
             json_paths = 'auto'
             
-        self.log.info('Coping data from {} to {} on table Redshift'.format(s3_path, table))
+        self.log.info('Coping data from {} to {} on table Redshift'.format(s3_path, self.table))
         formatted_sql = StageToRedshiftOperator.copy_sql.format(
             self.table,
             s3_path,
@@ -64,6 +64,6 @@ class StageToRedshiftOperator(BaseOperator):
             json_paths
         )
         redshift.run(formatted_sql)
-        self.log.info('Successfully Copied data from {} to {} table on Redshift'.format(s3_path, table))
+        self.log.info('Successfully Copied data from {} to {} table on Redshift'.format(s3_path, self.table))
 
         

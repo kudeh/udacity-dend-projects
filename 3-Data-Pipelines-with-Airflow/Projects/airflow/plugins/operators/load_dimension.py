@@ -5,6 +5,9 @@ from airflow.utils.decorators import apply_defaults
 class LoadDimensionOperator(BaseOperator):
 
     ui_color = '#80BD9E'
+    insert_template = """
+        INSERT INTO {} ({});
+    """
 
     @apply_defaults
     def __init__(self,
