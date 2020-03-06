@@ -13,7 +13,6 @@ def execute_queries(cur, conn, query_list):
         None
     """
     for query in query_list:
-        print(query)
         try:
             cur.execute(query)
             conn.commit()
@@ -31,9 +30,6 @@ def main():
     conn = psycopg2.connect("host={} dbname={} user={} password={} port={}"\
             .format(*config['CLUSTER'].values()))
     cur = conn.cursor()
-
-    print("host={} dbname={} user={} password={} port={}"\
-            .format(*config['CLUSTER'].values()))
 
     execute_queries(cur, conn, drop_table_queries) # drop tables
     execute_queries(cur, conn, create_table_queries) # create tables
