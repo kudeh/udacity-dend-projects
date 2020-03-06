@@ -35,5 +35,6 @@ class LoadFactOperator(BaseOperator):
             redshift.run(f'TRUNCATE TABLE {self.target_table}')
             
         insert_query = LoadFactOperator.insert_template.format(self.target_table, self.query)
-        self.log.info(f'Running LoadFactOperator for {self.target_table} table')
+        self.log.info(f'Loading Fact table: {self.target_table}')
         redshift.run(insert_query)
+        self.log.info(f'Successfully Loaded Fact table: {self.target_table}')

@@ -12,7 +12,7 @@ from helpers import SqlQueries
 default_args = {
     'owner': 'kene',
     'depends_on_past': False,
-    'start_date': datetime(2019, 1, 12),
+    'start_date': datetime(2020, 3, 5),
     'retries': 3,
     'retry_delay': timedelta(minutes=5),
     'catchup': False,
@@ -36,7 +36,7 @@ stage_events_to_redshift = StageToRedshiftOperator(
     s3_bucket='udacity-dend',
     s3_key='log_data',
     json_paths='log_json_path.json',
-    use_partitioned=True,
+    use_partitioned=False,
     partition_template='{execution_date.year}/{execution_date.month}'
 )
 

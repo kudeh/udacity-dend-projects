@@ -27,13 +27,13 @@ class StageToRedshiftOperator(BaseOperator):
                  *args, **kwargs):
 
         super(StageToRedshiftOperator, self).__init__(*args, **kwargs)
-        self.table = table,
-        self.redshift_conn_id = redshift_conn_id,
-        self.aws_credentials_id = aws_credentials_id,
-        self.s3_bucket = s3_bucket,
-        self.s3_key = s3_key,
-        self.json_paths = json_paths,
-        self.use_partitioned = use_partitioned,
+        self.table = table
+        self.redshift_conn_id = redshift_conn_id
+        self.aws_credentials_id = aws_credentials_id
+        self.s3_bucket = s3_bucket
+        self.s3_key = s3_key
+        self.json_paths = json_paths
+        self.use_partitioned = use_partitioned
         self.partition_template = partition_template
 
     def execute(self, context):
@@ -55,7 +55,7 @@ class StageToRedshiftOperator(BaseOperator):
         else:
             json_paths = 'auto'
             
-        self.log.info('Coping data from {} to {} on Redshift'.format(s3_path, table))
+        self.log.info('Coping data from {} to {} on table Redshift'.format(s3_path, table))
         formatted_sql = StageToRedshiftOperator.copy_sql.format(
             self.table,
             s3_path,
@@ -64,4 +64,6 @@ class StageToRedshiftOperator(BaseOperator):
             json_paths
         )
         redshift.run(formatted_sql)
+        self.log.info('Successfully Copied data from {} to {} table on Redshift'.format(s3_path, table))
+
         

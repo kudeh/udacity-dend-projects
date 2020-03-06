@@ -30,5 +30,6 @@ class LoadDimensionOperator(BaseOperator):
             redshift.run(f'TRUNCATE TABLE {self.target_table}')
             
         insert_query = LoadDimensionOperator.insert_template.format(self.target_table, self.query)
-        self.log.info(f'Running LoadDimensionOperator for {self.target_table} table')
+        self.log.info(f'Loading Dimension table: {self.target_table}')
         redshift.run(insert_query)
+        self.log.info(f'Successfully Loaded Dimension table: {self.target_table}')
