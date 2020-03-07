@@ -35,9 +35,9 @@ stage_events_to_redshift = StageToRedshiftOperator(
     aws_credentials_id='aws_credentials',
     s3_bucket='udacity-dend',
     s3_key='log_data',
-    json_paths='log_json_path.json',
-    use_partitioned=False,
-    partition_template='{execution_date.year}/{execution_date.month}'
+#     json_paths='log_json_path.json',
+#     use_partitioned=True,
+#     partition_template='{execution_date.year}/{execution_date.month}'
 )
 
 stage_songs_to_redshift = StageToRedshiftOperator(
@@ -90,14 +90,64 @@ load_time_dimension_table = LoadDimensionOperator(
     target_table='time'
 )
 
-# run_quality_checks = DataQualityOperator(
-#     task_id='Run_data_quality_checks',
-#     dag=dag
-# )
+quality_check_staging_events_table = DataQualityOperator(
+    task_id='quality_check_staging_events_table',
+    dag=dag,
+    redshift_conn_id='redshift',
+    table='staging_events'
+)
+
+quality_check_staging_songs_table = DataQualityOperator(
+    task_id='quality_check_staging_songs_table',
+    dag=dag,
+    redshift_conn_id='redshift',
+    table='staging_songs'
+)
+
+quality_check_songplays_table = DataQualityOperator(
+    task_id='quality_check_songplays_table',
+    dag=dag,
+    redshift_conn_id='redshift',
+    table='songplays'
+)
+
+quality_check_users_table = DataQualityOperator(
+    task_id='quality_check_users_table',
+    dag=dag,
+    redshift_conn_id='redshift',
+    table='users'
+)
+
+quality_check_artists_table = DataQualityOperator(
+    task_id='quality_check_artists_table',
+    dag=dag,
+    redshift_conn_id='redshift',
+    table='artists'
+)
+
+quality_check_songs_table = DataQualityOperator(
+    task_id='quality_check_songs_table',
+    dag=dag,
+    redshift_conn_id='redshift',
+    table='songs'
+)
+
+quality_check_time_table = DataQualityOperator(
+    task_id='quality_check_time_table',
+    dag=dag,
+    redshift_conn_id='redshift',
+    table='time'
+)
 
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)
 
 start_operator >> [stage_events_to_redshift, stage_songs_to_redshift]
-[stage_events_to_redshift, stage_songs_to_redshift] >> load_songplays_table
-load_songplays_table >> [load_user_dimension_table, load_song_dimension_table, load_artist_dimension_table, load_time_dimension_table]
-[load_user_dimension_table, load_song_dimension_table, load_artist_dimension_table, load_time_dimension_table] >> end_operator
+stage_events_to_redshift >> quality_check_staging_events_table
+stage_songs_to_redshift >> quality_check_staging_songs_table
+[quality_check_staging_events_table, quality_check_staging_songs_table] >> load_songplays_table >> quality_check_songplays_table
+quality_check_songplays_table >> load_time_dimension_table >> quality_check_time_table
+quality_check_staging_events_table >> load_user_dimension_table >> quality_check_users_table
+quality_check_staging_songs_table >> [load_artist_dimension_table, load_song_dimension_table]
+load_artist_dimension_table >> quality_check_artists_table
+load_song_dimension_table >> quality_check_songs_table
+[quality_check_time_table, quality_check_users_table, quality_check_songs_table, quality_check_artists_table] >> end_operator
