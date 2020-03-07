@@ -3,7 +3,13 @@ from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
 class LoadFactOperator(BaseOperator):
-
+    """Custom Operator for loading data into fact tables.
+    
+    Attributes:
+        ui_color (str): color code for task in Airflow UI.
+        insert_template (str): template string for inserting data.
+        
+    """
     ui_color = '#F98866'
     insert_template = """
         INSERT INTO {} ({});
@@ -16,18 +22,26 @@ class LoadFactOperator(BaseOperator):
                  target_table="",
                  truncate=False,
                  *args, **kwargs):
+        """Initializes a Fact Load Operator.
+        Args:
+            redshift_conn_id (str): Airflow connection ID for redshift database.
+            query (str): Query used to populate fact table.
+            target_table (str): Name of fact table.
+            truncate (bool): Flag that determines if table is truncated before insert.
 
+        """
         super(LoadFactOperator, self).__init__(*args, **kwargs)
         self.redshift_conn_id = redshift_conn_id
         self.query = query
         self.target_table = target_table
         self.truncate = truncate
-    """
-
-    """
 
     def execute(self, context):
-        
+        """Executes task for loading a fact table.
+        Args:
+            context (:obj:`dict`): Dict with values to apply on content.
+            
+        """
         redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id)
         
         if self.truncate:

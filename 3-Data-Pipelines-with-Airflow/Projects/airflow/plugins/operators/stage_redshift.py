@@ -4,6 +4,14 @@ from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
 class StageToRedshiftOperator(BaseOperator):
+    """Custom Operator for loading data into fact tables.
+    
+    Attributes:
+        ui_color (str): color code for task in Airflow UI.
+        template_fields (:obj:`tuple` of :obj: `str`): list of template parameters.
+        copy_sql (str): template string for coping data from S3.
+        
+    """
     ui_color = '#358140'
     template_fields = ("partition_template",)
     copy_sql = """
@@ -11,7 +19,7 @@ class StageToRedshiftOperator(BaseOperator):
         FROM '{}'
         ACCESS_KEY_ID '{}'
         SECRET_ACCESS_KEY '{}'
-        FORMAT AS JSON '{}'
+        FORMAT AS JSON 'auto'
     """
 
     @apply_defaults
@@ -21,7 +29,7 @@ class StageToRedshiftOperator(BaseOperator):
                  table="",
                  s3_bucket="",
                  s3_key="",
-                 json_paths="",
+#                  json_paths="",
                  use_partitioned=False,
                  partition_template="",
                  *args, **kwargs):
@@ -32,11 +40,16 @@ class StageToRedshiftOperator(BaseOperator):
         self.aws_credentials_id = aws_credentials_id
         self.s3_bucket = s3_bucket
         self.s3_key = s3_key
-        self.json_paths = json_paths
+#         self.json_paths = json_paths
         self.use_partitioned = use_partitioned
         self.partition_template = partition_template
 
     def execute(self, context):
+        """Executes task for staging to redshift.
+        Args:
+            context (:obj:`dict`): Dict with values to apply on content.
+            
+        """
         aws_hook = AwsHook(self.aws_credentials_id)
         credentials = aws_hook.get_credentials()
         redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id)
@@ -50,18 +63,18 @@ class StageToRedshiftOperator(BaseOperator):
             rendered_partition = self.partition_template.format(**context)
             s3_path = '{}/{}'.format(s3_path, rendered_partition)
              
-        if self.json_paths:
-            json_paths = 's3://{}/{}'.format(self.s3_bucket, self.json_paths)
-        else:
-            json_paths = 'auto'
+#         if self.json_paths:
+#             json_paths = 's3://{}/{}'.format(self.s3_bucket, self.json_paths)
+#         else:
+#             json_paths = 'auto'
             
         self.log.info('Coping data from {} to {} on table Redshift'.format(s3_path, self.table))
         formatted_sql = StageToRedshiftOperator.copy_sql.format(
             self.table,
             s3_path,
             credentials.access_key,
-            credentials.secret_key,
-            json_paths
+            credentials.secret_key
+#             json_paths
         )
         redshift.run(formatted_sql)
         self.log.info('Successfully Copied data from {} to {} table on Redshift'.format(s3_path, self.table))
