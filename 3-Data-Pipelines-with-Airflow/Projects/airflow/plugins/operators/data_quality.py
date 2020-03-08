@@ -19,8 +19,7 @@ class DataQualityOperator(BaseOperator):
     def __init__(self,
                  redshift_conn_id="",
                  table="",
-                 query="",
-                 result="",
+                 dq_checks=[],
                  *args, **kwargs):
         """Initializes a Data Quality Check Operator.
         Args:
@@ -33,8 +32,7 @@ class DataQualityOperator(BaseOperator):
         super(DataQualityOperator, self).__init__(*args, **kwargs)
         self.redshift_conn_id = redshift_conn_id
         self.table = table
-        self.query = query
-        self.result = result
+        self.dq_checks = dq_checks
 
     def execute(self, context):
         """Executes task for data quality check.
@@ -57,14 +55,22 @@ class DataQualityOperator(BaseOperator):
             raise ValueError(f'Fail: 0 rows in {self.table} table')
         self.log.info(f'Has {records[0][0]} Records!')
         
-        if self.result:
-            self.log.info(f'Checking if {self.query} returns expected results')
-            test_result = redshift.get_records(self.query)  
-            
-            if len(test_result) < 1 or len(test_result[0]) < 1:
-                raise ValueError(f'Fail: No results for query: {self.query}')
+        failing_tests = []
+        error_count = 0
 
-            if test_result[0][0] != self.result:
-                raise ValueError(f'Fail: Unexpected result, \nexpected: {self.result} \ngot: {test_result[0][0]}')
+        for check in self.dq_checks:
+            sql = check.get('check_sql')
+            exp_result = check.get('expected_result')
+
+            records = redshift.get_records(sql)[0]
+
+            if exp_result != records[0]:
+                error_count += 1
+                failing_tests.append(sql)
+
+        if error_count > 0:
+            self.log.info('Tests failed')
+            self.log.info(failing_tests)
+            raise ValueError('Data quality check failed')
        
         self.log.info(f'Data Quality Check on {self.table} table was successful!')

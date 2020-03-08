@@ -90,7 +90,7 @@ song_table_create = ("""
 
 artist_table_create = ("""
     CREATE TABLE public.artists (
-    	artist_id varchar(256) NOT NULL,
+    	artistid varchar(256) NOT NULL,
     	name varchar(256),
     	location varchar(256),
     	latitude numeric(18,0),

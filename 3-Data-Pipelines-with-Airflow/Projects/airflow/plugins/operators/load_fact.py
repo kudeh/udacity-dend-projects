@@ -20,7 +20,7 @@ class LoadFactOperator(BaseOperator):
                  redshift_conn_id="",
                  query="",
                  target_table="",
-                 truncate=True,
+                 truncate=False,
                  *args, **kwargs):
         """Initializes a Fact Load Operator.
         Args:

@@ -12,7 +12,7 @@ from helpers import SqlQueries
 default_args = {
     'owner': 'kene',
     'depends_on_past': False,
-    'start_date': datetime(2020, 3, 6),
+    'start_date': datetime(2020, 3, 7),
     'retries': 3,
     'retry_delay': timedelta(minutes=5),
     'catchup': False,
@@ -108,35 +108,40 @@ quality_check_songplays_table = DataQualityOperator(
     task_id='quality_check_songplays_table',
     dag=dag,
     redshift_conn_id='redshift',
-    table='songplays'
+    table='songplays',
+    dq_checks=[{'check_sql': "SELECT COUNT(*) FROM songplays WHERE playid is null", 'expected_result': 0}]
 )
 
 quality_check_users_table = DataQualityOperator(
     task_id='quality_check_users_table',
     dag=dag,
     redshift_conn_id='redshift',
-    table='users'
+    table='users',
+    dq_checks=[{'check_sql': "SELECT COUNT(*) FROM users WHERE userid is null", 'expected_result': 0}]
 )
 
 quality_check_artists_table = DataQualityOperator(
     task_id='quality_check_artists_table',
     dag=dag,
     redshift_conn_id='redshift',
-    table='artists'
+    table='artists',
+    dq_checks=[{'check_sql': "SELECT COUNT(*) FROM artists WHERE artistid is null", 'expected_result': 0}]
 )
 
 quality_check_songs_table = DataQualityOperator(
     task_id='quality_check_songs_table',
     dag=dag,
     redshift_conn_id='redshift',
-    table='songs'
+    table='songs',
+    dq_checks=[{'check_sql': "SELECT COUNT(*) FROM songs WHERE songid is null", 'expected_result': 0}]
 )
 
 quality_check_time_table = DataQualityOperator(
     task_id='quality_check_time_table',
     dag=dag,
     redshift_conn_id='redshift',
-    table='time'
+    table='time',
+    dq_checks=[{'check_sql': "SELECT COUNT(*) FROM time WHERE start_time is null", 'expected_result': 0}]
 )
 
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)

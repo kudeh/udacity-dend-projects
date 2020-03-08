@@ -20,7 +20,7 @@ class LoadDimensionOperator(BaseOperator):
                  redshift_conn_id="",
                  query="",
                  target_table="",
-                 truncate=False,
+                 truncate=True,
                  *args, **kwargs):
         """Initializes a Dimension Load Operator.
         Args:
