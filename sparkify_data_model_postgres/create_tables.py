@@ -1,3 +1,5 @@
+"""Drops and Creates tables in Postgres database"""
+
 import psycopg2
 from sql_queries import create_table_queries, drop_table_queries
 
@@ -5,7 +7,7 @@ from sql_queries import create_table_queries, drop_table_queries
 def create_database():
     """Creates sparkify database
     Args:
-
+        None
     Returns:
         cur (`psycopg2.extensions.cursor`): Cursor for connection
         con (`psycopg2.extensions.connection`): database connection
