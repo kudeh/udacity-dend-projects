@@ -1,4 +1,5 @@
 # Sparkify's Data Modeling With PostgreSQL
+##### Table of Contents  
 - [Introduction](#introduction)
 - [Set Up](#setup)
 - [Usage](#usage)
@@ -71,15 +72,15 @@
     ```bash
     $ python3 -m venv venv
     $ source venv/bin/activate
-    $ pip3 install -r requirements.txt
+    $ (venv) pip3 install -r requirements.txt
     ```
 
 ## Usage
 1. Create Tables
     ```bash
-    $ python create_tables.py
+    $ (venv) python create_tables.py
     ```
 2. Run etl
     ```bash
-    $ python etl.py
+    $ (venv) python etl.py
     ```

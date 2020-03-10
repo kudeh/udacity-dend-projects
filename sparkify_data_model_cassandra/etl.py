@@ -8,7 +8,7 @@ def preprocess():
     Args:
         None
     Returns:
-        df (`pandas.core.frame.DataFrame`): dataframe containing all events data
+        df (:obj:`pandas.core.frame.DataFrame`): dataframe containing all events data
     """
     #### Creating list of filepaths to process original event csv data files
     # checking your current working directory
