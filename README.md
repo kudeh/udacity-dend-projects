@@ -1,7 +1,7 @@
 # Data Engineer Nanodegree Projects
 My Project Solutions From [Udacity Data Engineer Nanodegree Program](https://www.udacity.com/course/data-engineer-nanodegree--nd027).
 
-## 1. Data Modeling with PostgreSQL
+## 1. [Data Modeling with PostgreSQL](https://github.com/kudeh/udacity-dend-projects/tree/master/sparkify_data_model_postgres)
 Set up a relational database using PostgreSQL to model user activity data for sparkify - a music streaming app.
 
 * **Tasks Completed:**
@@ -19,7 +19,7 @@ Set up a relational database using PostgreSQL to model user activity data for sp
     * Python (Pandas, Jupyter, psycopg2)
     * PosgreSQL
 
-## 2. NoSQL Data Modeling with Apache Cassandra
+## 2. [NoSQL Data Modeling with Apache Cassandra](https://github.com/kudeh/udacity-dend-projects/tree/master/sparkify_data_model_cassandra)
 Set up noSQL database tables using Apache Cassandra to answer business questions about user activity for sparkify - a music streaming app.
 
 * **Tasks Completed:**
@@ -36,7 +36,7 @@ Set up noSQL database tables using Apache Cassandra to answer business questions
     * Python (Pandas, Jupyter, cassandra)
     * Apache Cassandra
 
-## 3. Data Warehousing with Amazon Redshift
+## 3. [Data Warehousing with Amazon Redshift](https://github.com/kudeh/udacity-dend-projects/tree/master/sparkify_data_warehouse_redshift)
 Set up a data warehouse using Amazon Redshift containing user activity data for sparkify - a music streaming app.
 
 * **Tasks Completed:**
@@ -53,7 +53,7 @@ Set up a data warehouse using Amazon Redshift containing user activity data for 
     * Python (Pandas, Jupyter, psycopg2, boto3)
     * Apache Cassandra
 
-## 4. Data Lake with Apache Spark
+## 4. [Data Lake with Apache Spark](https://github.com/kudeh/udacity-dend-projects/tree/master/sparkify_data_lake_spark)
 Set up a spark data lake using Amazon EMR that performs analytics on user activity data for sparkify - a music streaming app.
 
 * **Tasks Completed:**
@@ -70,7 +70,7 @@ Set up a spark data lake using Amazon EMR that performs analytics on user activi
     * Apache Spark
     * Amazon Elastic MapReduce(EMR)
 
-## 5. Data Pipelines with Apache Airflow
+## 5. [Data Pipelines with Apache Airflow](https://github.com/kudeh/udacity-dend-projects/tree/master/sparkify_data_pipeline_airflow)
 Set up a data pipeline using Apache Airflow that schedules and monitors workflow for performing analytics on user activity data for sparkify - a music streaming app.
 
 * **Tasks Completed:**
