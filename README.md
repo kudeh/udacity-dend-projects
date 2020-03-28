@@ -86,3 +86,7 @@ Set up a data pipeline using Apache Airflow that schedules and monitors workflow
 * **Core Technologies Used:**
     * Python (airflow)
     * Apache Airflow
+
+
+## 5. [Capstone Project](https://github.com/kudeh/udacity-dend-capstone)
+For my capstone project I developed a data pipeline that creates an analytics database for querying information about immigration into the U.S on a monthly basis. The analytics tables are hosted in a Redshift Database and the pipeline implementation was done using Apache Airflow.
